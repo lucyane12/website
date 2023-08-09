@@ -96,3 +96,32 @@ app.get('/image/search', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+///// tes
+
+async function test() {
+  try {
+    const url = 'https://zeev-x.github.io/json-database/ecchi/blackpink.json';
+    const response = await axios.get(url);
+    var rand = Math.floor(Math.random()*response.data.length);
+    var x = response.data[rand].img;
+    return x
+  } catch (err) {
+    console.error('Error fetching image URL:', err);
+    throw err;
+  }
+}
+
+app.get('/image/test', async (req, res) => {
+  try {
+    const imageUrl = await test();
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const imageBuffer = Buffer.from(response.data, 'binary');
+
+    res.setHeader('Content-Type', 'image/jpeg'); // Sesuaikan dengan tipe gambar yang benar
+    res.send(imageBuffer);
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
